@@ -34,6 +34,8 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+import NextTopLoader from 'nextjs-toploader';
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let initialThemes: Record<string, string> = {}
   try {
@@ -52,6 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <NextTopLoader color="#10b981" showSpinner={false} shadow="0 0 10px #10b981,0 0 5px #10b981" />
         <PWAProvider>
           <StatusColorProvider initialThemes={initialThemes}>
             {children}

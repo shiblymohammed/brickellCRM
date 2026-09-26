@@ -43,6 +43,7 @@ export default function BottomBar() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    prefetch={true}
                     onClick={() => setShowMore(false)}
                     className="flex flex-col items-center gap-2"
                   >
@@ -81,6 +82,7 @@ export default function BottomBar() {
               <Link
                 key={link.href}
                 href={link.href}
+                prefetch={true}
                 className="relative -top-5 flex flex-col items-center justify-center w-14 h-14 bg-slate-900 rounded-full shadow-lg text-white hover:scale-105 transition-transform"
               >
                 <Icon className="w-6 h-6" />
@@ -92,6 +94,7 @@ export default function BottomBar() {
             <Link
               key={link.href}
               href={link.href}
+              prefetch={true}
               className={cn(
                 "flex flex-col items-center justify-center w-16 h-full gap-1 transition-colors",
                 isActive ? "text-slate-900" : "text-slate-400"
