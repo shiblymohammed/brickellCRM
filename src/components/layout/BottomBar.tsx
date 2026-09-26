@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { UserCheck, BarChart, Settings, LogOut } from 'lucide-react'
 import { logout } from '@/lib/auth/actions'
+import { InstallButton } from '@/components/pwa/InstallButton'
 
 const bottomLinks = [
   { name: 'Home', href: '/admin', icon: LayoutDashboard },
@@ -53,7 +54,8 @@ export default function BottomBar() {
                 )
               })}
             </div>
-            <div className="mt-2 pt-4 border-t border-slate-100">
+            <div className="mt-2 pt-4 border-t border-slate-100 space-y-3">
+              <InstallButton className="w-full justify-center" />
               <form action={logout}>
                 <button
                   type="submit"

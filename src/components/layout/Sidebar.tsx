@@ -6,6 +6,8 @@ import { LayoutDashboard, Users, UserCheck, Inbox, Upload, Settings, BarChart, L
 import { cn } from '@/lib/utils'
 import { logout } from '@/lib/auth/actions'
 
+import { InstallButton } from '@/components/pwa/InstallButton'
+
 const adminLinks = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'All Leads', href: '/admin/leads', icon: Inbox },
@@ -59,6 +61,10 @@ export default function Sidebar({ userName = 'Admin', userRole = 'Admin' }: Side
               </Link>
             )
           })}
+          
+          <div className="pt-4 mt-4 border-t border-slate-100">
+            <InstallButton className="w-full" />
+          </div>
         </nav>
       </div>
 
