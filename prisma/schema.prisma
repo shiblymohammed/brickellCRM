@@ -28,6 +28,11 @@ enum LeadStatus {
   LOST
 }
 
+model StatusColor {
+  status LeadStatus @id
+  theme  String     @default("slate")
+}
+
 enum AIProcessingStatus {
   QUEUED
   PROCESSING

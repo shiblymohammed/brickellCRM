@@ -3,14 +3,16 @@
 import { useState } from 'react'
 import { TrendingUp, Loader2 } from 'lucide-react'
 
+import { useStatusColors } from '@/components/providers/StatusColorProvider'
+
 const STATUSES = [
-  { value: 'CONTACTED', label: 'Contacted', color: 'bg-purple-100 text-purple-700 border-purple-200' },
-  { value: 'INTERESTED', label: 'Interested', color: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
-  { value: 'FOLLOW_UP', label: 'Follow Up', color: 'bg-cyan-100 text-cyan-700 border-cyan-200' },
-  { value: 'QUOTATION', label: 'Quotation', color: 'bg-orange-100 text-orange-700 border-orange-200' },
-  { value: 'NEGOTIATION', label: 'Negotiation', color: 'bg-pink-100 text-pink-700 border-pink-200' },
-  { value: 'WON', label: '🎉 Won', color: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
-  { value: 'LOST', label: 'Lost', color: 'bg-red-100 text-red-700 border-red-200' },
+  { value: 'CONTACTED', label: 'Contacted' },
+  { value: 'INTERESTED', label: 'Interested' },
+  { value: 'FOLLOW_UP', label: 'Follow Up' },
+  { value: 'QUOTATION', label: 'Quotation' },
+  { value: 'NEGOTIATION', label: 'Negotiation' },
+  { value: 'WON', label: '🎉 Won' },
+  { value: 'LOST', label: 'Lost' },
 ]
 
 export default function LeadStatusUpdater({
@@ -22,6 +24,7 @@ export default function LeadStatusUpdater({
   currentStatus: string
   staffId: string
 }) {
+  const { getColors } = useStatusColors()
   const [status, setStatus] = useState(currentStatus)
   const [updating, setUpdating] = useState(false)
   const [note, setNote] = useState('')
@@ -55,19 +58,21 @@ export default function LeadStatusUpdater({
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
-        {STATUSES.map(s => (
+        {STATUSES.map(s => {
+          const colors = getColors(s.value)
+          return (
           <button
             key={s.value}
             onClick={() => setStatus(s.value)}
             className={`px-3 py-2 rounded-lg border text-xs font-medium text-left transition-all ${
               status === s.value
-                ? `${s.color} ring-2 ring-offset-1 ring-slate-400`
+                ? `${colors.bg} ${colors.text} ${colors.border} ring-2 ring-offset-1 ring-slate-400`
                 : 'bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300'
             }`}
           >
             {s.label}
           </button>
-        ))}
+        )})}
       </div>
 
       <div className="space-y-3">

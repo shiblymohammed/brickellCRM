@@ -15,7 +15,7 @@ export default async function SalesDashboard() {
 
   const employee = staff[0]
 
-  const [myLeads, todayFollowups] = await Promise.all([
+  const [myLeads, todayFollowups, statusColorsData] = await Promise.all([
     employee ? prisma.lead.findMany({
       where: { assignedToId: employee.id },
       orderBy: { createdAt: 'desc' },
@@ -27,8 +27,38 @@ export default async function SalesDashboard() {
         status: 'PENDING',
         date: { gte: new Date(new Date().setHours(0,0,0,0)) }
       }
-    }) : 0
+    }) : 0,
+    prisma.statusColor.findMany()
   ])
+
+  const themes: Record<string, string> = {}
+  statusColorsData.forEach(sc => { themes[sc.status] = sc.theme })
+
+  const getSafeColors = (status: string) => {
+    const theme = themes[status] || 'slate'
+    const safeClasses: Record<string, { bg: string, text: string, border: string }> = {
+      slate: { bg: 'bg-slate-50/40', text: 'text-slate-600', border: 'border-slate-200' },
+      gray: { bg: 'bg-gray-50/40', text: 'text-gray-600', border: 'border-gray-200' },
+      red: { bg: 'bg-red-50/40', text: 'text-red-600', border: 'border-red-200' },
+      orange: { bg: 'bg-orange-50/40', text: 'text-orange-600', border: 'border-orange-200' },
+      amber: { bg: 'bg-amber-50/40', text: 'text-amber-600', border: 'border-amber-200' },
+      yellow: { bg: 'bg-yellow-50/40', text: 'text-yellow-700', border: 'border-yellow-200' },
+      lime: { bg: 'bg-lime-50/40', text: 'text-lime-700', border: 'border-lime-200' },
+      green: { bg: 'bg-green-50/40', text: 'text-green-700', border: 'border-green-200' },
+      emerald: { bg: 'bg-emerald-50/40', text: 'text-emerald-700', border: 'border-emerald-200' },
+      teal: { bg: 'bg-teal-50/40', text: 'text-teal-700', border: 'border-teal-200' },
+      cyan: { bg: 'bg-cyan-50/40', text: 'text-cyan-700', border: 'border-cyan-200' },
+      sky: { bg: 'bg-sky-50/40', text: 'text-sky-700', border: 'border-sky-200' },
+      blue: { bg: 'bg-blue-50/40', text: 'text-blue-700', border: 'border-blue-200' },
+      indigo: { bg: 'bg-indigo-50/40', text: 'text-indigo-700', border: 'border-indigo-200' },
+      violet: { bg: 'bg-violet-50/40', text: 'text-violet-700', border: 'border-violet-200' },
+      purple: { bg: 'bg-purple-50/40', text: 'text-purple-700', border: 'border-purple-200' },
+      fuchsia: { bg: 'bg-fuchsia-50/40', text: 'text-fuchsia-700', border: 'border-fuchsia-200' },
+      pink: { bg: 'bg-pink-50/40', text: 'text-pink-700', border: 'border-pink-200' },
+      rose: { bg: 'bg-rose-50/40', text: 'text-rose-700', border: 'border-rose-200' },
+    }
+    return safeClasses[theme] || safeClasses.slate
+  }
 
   const temperatureColor: Record<string, string> = {
     hot: 'text-red-600 bg-red-50 border-red-200',
@@ -71,23 +101,30 @@ export default async function SalesDashboard() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
-            {myLeads.map((lead) => (
-              <Card key={lead.id} className="flex flex-col hover:shadow-md transition-shadow shadow-sm border-slate-200">
+            {myLeads.map((lead) => {
+              const colors = getSafeColors(lead.status)
+              return (
+              <Card key={lead.id} className={`flex flex-col hover:shadow-md transition-shadow shadow-sm ${colors.border} ${colors.bg}`}>
                 <CardContent className="p-3 md:p-5 flex flex-col h-full">
                   <div className="flex items-start justify-between mb-2 md:mb-3">
-                    <div>
-                      <h3 className="font-bold text-slate-900 text-sm md:text-base leading-tight">
+                    <div className="min-w-0 pr-2">
+                      <h3 className="font-bold text-slate-900 text-sm md:text-base leading-tight truncate">
                         {lead.customerName || 'Unknown Customer'}
                       </h3>
                       <p className="text-[11px] md:text-xs text-slate-500 mt-0.5 truncate max-w-[200px]">
                         {lead.requirement || 'No requirement specified'}
                       </p>
                     </div>
-                    {lead.leadTemperature && (
-                      <span className={`flex-shrink-0 inline-flex items-center rounded-md border px-1.5 md:px-2 py-0.5 text-[9px] md:text-xs font-bold uppercase tracking-wider ${temperatureColor[lead.leadTemperature] || ''}`}>
-                        {lead.leadTemperature}
+                    <div className="flex flex-col items-end gap-1">
+                      <span className={`flex-shrink-0 inline-flex items-center rounded-md border px-1.5 md:px-2 py-0.5 text-[9px] md:text-[10px] font-bold uppercase tracking-wider ${colors.bg} ${colors.text} ${colors.border}`}>
+                        {lead.status.replace(/_/g, ' ')}
                       </span>
-                    )}
+                      {lead.leadTemperature && (
+                        <span className={`flex-shrink-0 inline-flex items-center rounded-md border px-1.5 md:px-2 py-0.5 text-[8px] md:text-[9px] font-bold uppercase tracking-wider ${temperatureColor[lead.leadTemperature] || ''}`}>
+                          {lead.leadTemperature}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-x-3 gap-y-1 md:gap-y-2 mb-3 text-sm bg-slate-50 p-2 rounded-lg border border-slate-100">
@@ -135,7 +172,8 @@ export default async function SalesDashboard() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

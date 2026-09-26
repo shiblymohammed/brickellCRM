@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
-import { CheckCircle } from 'lucide-react'
+import { CheckCircle, Loader2 } from 'lucide-react'
+import { useStatusColors } from '@/components/providers/StatusColorProvider'
 
 const strategies = [
   {
@@ -104,6 +105,18 @@ export default function SettingsPage() {
 
       <Card className="shadow-sm border-slate-200">
         <CardHeader className="p-4 md:p-6 pb-2 md:pb-4">
+          <CardTitle className="text-sm md:text-base font-bold uppercase md:normal-case tracking-wide md:tracking-normal text-slate-900">Lead Status Colors</CardTitle>
+          <CardDescription className="text-[11px] md:text-sm">
+            Customize the background and border colors for each lead status across the system.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-4 md:p-6 pt-0 md:pt-0">
+          <StatusColorSettings />
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-sm border-slate-200">
+        <CardHeader className="p-4 md:p-6 pb-2 md:pb-4">
           <CardTitle className="text-sm md:text-base font-bold uppercase md:normal-case tracking-wide md:tracking-normal text-slate-900">WhatsApp Integration</CardTitle>
           <CardDescription className="text-[11px] md:text-sm">
             Future: Direct WhatsApp Business API connection.
@@ -116,6 +129,64 @@ export default function SettingsPage() {
           </div>
         </CardContent>
       </Card>
+    </div>
+  )
+}
+
+function StatusColorSettings() {
+  const { themes, getColors, setThemes } = useStatusColors()
+  const [saving, setSaving] = useState<string | null>(null)
+
+  const availableThemes = [
+    'slate', 'gray', 'red', 'orange', 'amber', 'yellow', 'lime', 'green',
+    'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'
+  ]
+
+  const statuses = [
+    'AI_DRAFT', 'PENDING_AUDIT', 'REJECTED', 'APPROVED', 'ASSIGNED',
+    'CONTACTED', 'INTERESTED', 'FOLLOW_UP', 'QUOTATION', 'NEGOTIATION', 'WON', 'LOST'
+  ]
+
+  const handleUpdate = async (status: string, theme: string) => {
+    setSaving(status)
+    try {
+      const res = await fetch('/api/settings/colors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, theme })
+      })
+      if (res.ok) {
+        setThemes({ ...themes, [status]: theme })
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setSaving(null)
+    }
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+      {statuses.map(status => {
+        const colors = getColors(status)
+        return (
+          <div key={status} className={`p-3 rounded-lg border ${colors.bg} ${colors.border} flex items-center justify-between`}>
+            <span className={`text-[10px] md:text-xs font-bold uppercase tracking-wider ${colors.text}`}>
+              {status.replace(/_/g, ' ')}
+            </span>
+            <select
+              value={themes[status] || 'slate'}
+              onChange={(e) => handleUpdate(status, e.target.value)}
+              disabled={saving === status}
+              className={`ml-2 w-24 h-7 text-xs rounded border-slate-200 bg-white shadow-sm focus:ring-1 focus:ring-slate-900 ${saving === status ? 'opacity-50' : ''}`}
+            >
+              {availableThemes.map(t => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+          </div>
+        )
+      })}
     </div>
   )
 }

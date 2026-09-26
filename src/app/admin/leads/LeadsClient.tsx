@@ -5,20 +5,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Search, CheckSquare, Square, Loader2, List, LayoutGrid } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-const statusColor: Record<string, string> = {
-  AI_DRAFT: 'bg-slate-100 text-slate-600',
-  PENDING_AUDIT: 'bg-yellow-50 text-yellow-700',
-  APPROVED: 'bg-emerald-50 text-emerald-700',
-  ASSIGNED: 'bg-blue-50 text-blue-700',
-  CONTACTED: 'bg-purple-50 text-purple-700',
-  INTERESTED: 'bg-indigo-50 text-indigo-700',
-  FOLLOW_UP: 'bg-cyan-50 text-cyan-700',
-  QUOTATION: 'bg-orange-50 text-orange-700',
-  NEGOTIATION: 'bg-pink-50 text-pink-700',
-  WON: 'bg-green-50 text-green-700',
-  LOST: 'bg-red-50 text-red-700',
-  REJECTED: 'bg-slate-50 text-slate-500',
-}
+import { useStatusColors } from '@/components/providers/StatusColorProvider'
 
 const filterOptions = [
   { id: 'ALL', label: 'All' },
@@ -30,6 +17,7 @@ const filterOptions = [
 
 export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
   const router = useRouter()
+  const { getColors } = useStatusColors()
   const [search, setSearch] = useState('')
   const [activeFilter, setActiveFilter] = useState('ALL')
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set())
@@ -220,7 +208,7 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
                   <div 
                     key={lead.id} 
                     onClick={() => toggleSelect(lead.id)}
-                    className={`flex items-start gap-2 p-2 border-b border-slate-100 ${isSelected ? 'bg-blue-50/40' : ''}`}
+                    className={`flex items-start gap-2 p-2 border-b border-slate-100 ${isSelected ? 'bg-blue-50/40' : ''} ${!isSelected && getColors(lead.status).bg}`}
                   >
                     <button className={`flex-shrink-0 mt-0.5 ${isSelected ? 'text-blue-600' : 'text-slate-300'}`}>
                       {isSelected ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}
@@ -233,7 +221,7 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
                       <div className="flex items-center justify-between mt-0.5">
                         <span className="text-[10px] text-slate-500 truncate pr-2">{lead.requirement || 'No req'}</span>
                         <div className="flex items-center gap-1.5 flex-shrink-0">
-                          <span className={`px-1 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${statusColor[lead.status] || 'bg-slate-100 text-slate-600'}`}>
+                          <span className={`px-1 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${getColors(lead.status).bg} ${getColors(lead.status).text} ring-1 ring-inset ${getColors(lead.status).border}`}>
                             {lead.status.replace(/_/g, ' ')}
                           </span>
                           {lead.assignedTo ? (
@@ -270,12 +258,12 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       {filteredLeads.map((lead) => (
-                        <tr key={lead.id} onClick={() => toggleSelect(lead.id)} className={`cursor-pointer ${selectedLeads.has(lead.id) ? 'bg-slate-50' : 'hover:bg-slate-50/50'}`}>
+                        <tr key={lead.id} onClick={() => toggleSelect(lead.id)} className={`cursor-pointer ${selectedLeads.has(lead.id) ? 'bg-slate-50' : 'hover:bg-slate-50/50'} ${!selectedLeads.has(lead.id) && getColors(lead.status).bg}`}>
                           <td className="px-4 py-3 text-center"><button className={selectedLeads.has(lead.id) ? 'text-slate-900' : 'text-slate-300'}>{selectedLeads.has(lead.id) ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}</button></td>
                           <td className="px-4 py-3 font-bold text-slate-900 text-xs">{lead.customerName || 'Unknown'}</td>
                           <td className="px-4 py-3 text-slate-500 font-mono text-xs">{lead.phone || '—'}</td>
                           <td className="px-4 py-3 text-slate-600 max-w-[200px] truncate text-xs">{lead.requirement || '—'}</td>
-                          <td className="px-4 py-3"><span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase ${statusColor[lead.status] || 'bg-slate-50 text-slate-500'}`}>{lead.status.replace(/_/g, ' ')}</span></td>
+                          <td className="px-4 py-3"><span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase ${getColors(lead.status).bg} ${getColors(lead.status).text} ring-1 ring-inset ${getColors(lead.status).border}`}>{lead.status.replace(/_/g, ' ')}</span></td>
                           <td className="px-4 py-3 text-xs">{lead.assignedTo?.name ? <span className="font-semibold text-slate-700">{lead.assignedTo.name}</span> : <span className="font-bold text-amber-600">Unassigned</span>}</td>
                         </tr>
                       ))}
@@ -288,15 +276,15 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
               {viewMode === 'grid' && (
                 <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {filteredLeads.map(lead => (
-                    <div key={lead.id} onClick={() => toggleSelect(lead.id)} className={`p-4 rounded-xl border cursor-pointer ${selectedLeads.has(lead.id) ? 'border-slate-900 ring-1 ring-slate-900' : 'border-slate-200 bg-white hover:border-slate-300'}`}>
+                    <div key={lead.id} onClick={() => toggleSelect(lead.id)} className={`p-4 rounded-xl border cursor-pointer ${selectedLeads.has(lead.id) ? 'border-slate-900 ring-1 ring-slate-900 bg-white' : `${getColors(lead.status).bg} hover:border-slate-300 ${getColors(lead.status).border}`}`}>
                       <div className="flex justify-between mb-2">
                         <button className={selectedLeads.has(lead.id) ? 'text-slate-900' : 'text-slate-300'}>{selectedLeads.has(lead.id) ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}</button>
-                        <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase ${statusColor[lead.status]}`}>{lead.status.replace(/_/g, ' ')}</span>
+                        <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase ${getColors(lead.status).bg} ${getColors(lead.status).text} ring-1 ring-inset ${getColors(lead.status).border}`}>{lead.status.replace(/_/g, ' ')}</span>
                       </div>
                       <h3 className="font-bold text-sm truncate">{lead.customerName || 'Unknown'}</h3>
                       <div className="text-xs text-slate-500 font-mono mb-2">{lead.phone || 'No phone'}</div>
-                      {lead.requirement && <p className="text-xs text-slate-600 line-clamp-2 bg-slate-50 p-2 rounded-md mb-2">{lead.requirement}</p>}
-                      <div className="mt-auto pt-2 border-t border-slate-50">{lead.assignedTo?.name ? <span className="text-[10px] font-bold bg-slate-100 px-2 py-1 rounded">{lead.assignedTo.name}</span> : <span className="text-[10px] font-bold bg-amber-50 text-amber-600 px-2 py-1 rounded">Unassigned</span>}</div>
+                      {lead.requirement && <p className="text-xs text-slate-600 line-clamp-2 bg-white/50 p-2 rounded-md mb-2">{lead.requirement}</p>}
+                      <div className="mt-auto pt-2 border-t border-slate-200/50">{lead.assignedTo?.name ? <span className="text-[10px] font-bold bg-white px-2 py-1 rounded shadow-sm">{lead.assignedTo.name}</span> : <span className="text-[10px] font-bold bg-amber-50 text-amber-600 px-2 py-1 rounded">Unassigned</span>}</div>
                     </div>
                   ))}
                 </div>
