@@ -121,68 +121,68 @@ export default function SalesAttendancePage() {
   const hasCheckedOut = !!todayRecord?.checkOutTime
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-4 md:space-y-6 max-w-2xl mx-auto px-4 pt-4 md:px-0 md:pt-0">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Attendance</h1>
-        <p className="text-sm text-slate-500 mt-0.5">
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900">Attendance</h1>
+        <p className="text-xs md:text-sm text-slate-500 mt-0.5 font-medium">
           {format(new Date(), 'EEEE, dd MMMM yyyy')}
         </p>
       </div>
 
       {/* Today's Card */}
-      <Card>
-        <CardContent className="p-6">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-5">Today</h2>
+      <Card className="shadow-sm">
+        <CardContent className="p-4 md:p-6">
+          <h2 className="text-[11px] md:text-sm font-bold text-slate-500 uppercase tracking-wide mb-3 md:mb-5">Today</h2>
 
           {message && (
-            <div className={`mb-4 flex items-center gap-2 p-3 rounded-lg text-sm ${
+            <div className={`mb-3 md:mb-4 flex items-center gap-2 p-2.5 md:p-3 rounded-lg text-xs md:text-sm font-medium ${
               message.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'
             }`}>
-              {message.type === 'success' ? <CheckCircle className="w-4 h-4 flex-shrink-0" /> : <AlertCircle className="w-4 h-4 flex-shrink-0" />}
+              {message.type === 'success' ? <CheckCircle className="w-3.5 h-3.5 md:w-4 md:h-4 flex-shrink-0" /> : <AlertCircle className="w-3.5 h-3.5 md:w-4 md:h-4 flex-shrink-0" />}
               {message.text}
             </div>
           )}
 
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
-              <p className="text-xs text-slate-500 mb-1">Check In</p>
-              <p className="text-lg font-bold text-slate-900">
+          <div className="grid grid-cols-3 gap-2 md:gap-4 mb-4 md:mb-6">
+            <div className="text-center p-2.5 md:p-4 rounded-xl bg-slate-50 border border-slate-100">
+              <p className="text-[10px] md:text-xs font-bold uppercase tracking-wide text-slate-400 mb-1">Check In</p>
+              <p className="text-sm md:text-lg font-bold text-slate-900">
                 {hasCheckedIn ? format(new Date(todayRecord!.checkInTime!), 'hh:mm a') : '—'}
               </p>
             </div>
-            <div className="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
-              <p className="text-xs text-slate-500 mb-1">Check Out</p>
-              <p className="text-lg font-bold text-slate-900">
+            <div className="text-center p-2.5 md:p-4 rounded-xl bg-slate-50 border border-slate-100">
+              <p className="text-[10px] md:text-xs font-bold uppercase tracking-wide text-slate-400 mb-1">Check Out</p>
+              <p className="text-sm md:text-lg font-bold text-slate-900">
                 {hasCheckedOut ? format(new Date(todayRecord!.checkOutTime!), 'hh:mm a') : '—'}
               </p>
             </div>
-            <div className="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
-              <p className="text-xs text-slate-500 mb-1">Status</p>
+            <div className="text-center p-2.5 md:p-4 rounded-xl bg-slate-50 border border-slate-100">
+              <p className="text-[10px] md:text-xs font-bold uppercase tracking-wide text-slate-400 mb-1">Status</p>
               {todayRecord ? (
-                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[todayRecord.status]?.color}`}>
+                <span className={`inline-flex items-center rounded-md px-1.5 md:px-2 py-0.5 text-[9px] md:text-xs font-bold uppercase tracking-wider ${statusStyles[todayRecord.status]?.color}`}>
                   {statusStyles[todayRecord.status]?.label}
                 </span>
               ) : (
-                <p className="text-sm font-medium text-slate-400">Not in</p>
+                <p className="text-[11px] md:text-sm font-bold text-slate-400 mt-0.5">Not in</p>
               )}
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col md:flex-row gap-2 md:gap-3">
             <button
               onClick={handleCheckIn}
               disabled={hasCheckedIn || processing}
-              className="flex-1 flex items-center justify-center gap-2 h-12 rounded-xl bg-emerald-600 text-white font-medium hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 h-10 md:h-12 rounded-xl bg-emerald-600 text-white text-[11px] md:text-sm font-bold uppercase tracking-wide hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : <LogIn className="w-5 h-5" />}
+              {processing ? <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <LogIn className="w-4 h-4 md:w-5 md:h-5" />}
               {hasCheckedIn ? 'Checked In ✓' : 'Clock In'}
             </button>
             <button
               onClick={handleCheckOut}
               disabled={!hasCheckedIn || hasCheckedOut || processing}
-              className="flex-1 flex items-center justify-center gap-2 h-12 rounded-xl border border-slate-200 bg-white text-slate-700 font-medium hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 h-10 md:h-12 rounded-xl border border-slate-200 bg-white text-slate-700 text-[11px] md:text-sm font-bold uppercase tracking-wide hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : <LogOut className="w-5 h-5" />}
+              {processing ? <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <LogOut className="w-4 h-4 md:w-5 md:h-5" />}
               {hasCheckedOut ? 'Checked Out ✓' : 'Clock Out'}
             </button>
           </div>
@@ -190,11 +190,11 @@ export default function SalesAttendancePage() {
       </Card>
 
       {/* Info */}
-      <div className="flex items-start gap-2 p-3 rounded-lg bg-blue-50 border border-blue-100 text-xs text-blue-700">
-        <Clock className="w-4 h-4 flex-shrink-0 mt-0.5" />
+      <div className="flex items-start gap-2 p-3 rounded-lg bg-blue-50 border border-blue-100 text-[10px] md:text-xs text-blue-700">
+        <Clock className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
         <div>
-          <p className="font-medium">Attendance Policy</p>
-          <p className="mt-0.5 text-blue-600">Check-in before 9:00 AM is marked Present. After 9:00 AM is marked Late. Less than 5 hours is marked Half Day.</p>
+          <p className="font-bold uppercase tracking-wide">Attendance Policy</p>
+          <p className="mt-0.5 text-blue-600 font-medium">Check-in before 9:00 AM is marked Present. After 9:00 AM is marked Late. Less than 5 hours is marked Half Day.</p>
         </div>
       </div>
     </div>

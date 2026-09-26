@@ -34,16 +34,16 @@ export default function Topbar({ userName = 'Admin' }: TopbarProps) {
       </header>
 
       {/* Mobile Top Header (Minimal) */}
-      <header className="md:hidden h-14 flex items-center justify-between px-4 bg-white flex-shrink-0 pt-[env(safe-area-inset-top)] z-30 relative">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-slate-900 flex items-center justify-center">
-            <span className="text-white font-bold text-[10px]">B</span>
+      <header className="md:hidden h-11 flex items-center justify-between px-3 bg-white flex-shrink-0 pt-[env(safe-area-inset-top)] z-30 relative">
+        <div className="flex items-center gap-1.5">
+          <div className="w-5 h-5 rounded-[4px] bg-slate-900 flex items-center justify-center">
+            <span className="text-white font-bold text-[9px]">F</span>
           </div>
-          <h1 className="text-sm font-bold tracking-tight text-slate-900">BRICKELL</h1>
+          <h1 className="text-[13px] font-bold tracking-tight text-slate-900">FELLOW AI</h1>
         </div>
-        <button className="relative p-2 text-slate-500">
-          <span className="absolute top-2 right-2 block h-1.5 w-1.5 rounded-full bg-red-500 ring-2 ring-white" />
-          <Bell className="h-5 w-5" />
+        <button className="relative p-1.5 text-slate-500">
+          <span className="absolute top-1.5 right-1.5 block h-1.5 w-1.5 rounded-full bg-red-500 ring-2 ring-white" />
+          <Bell className="h-4 w-4" />
         </button>
       </header>
     </>

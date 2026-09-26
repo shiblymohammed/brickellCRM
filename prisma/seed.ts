@@ -23,7 +23,7 @@ async function main() {
     const employee = await prisma.employee.create({
       data: {
         userId: `mock-auth-id-${name.replace(/\s+/g, '-').toLowerCase()}`, // Mock Supabase Auth ID
-        email: `${name.replace(/\s+/g, '').toLowerCase()}@brickell.com`,
+        email: `${name.replace(/\s+/g, '').toLowerCase()}@fellow.ai`,
         name,
         phone: `+91987654321${employees.length}`,
         role: Role.SALES_STAFF,
@@ -38,7 +38,7 @@ async function main() {
   const admin = await prisma.employee.create({
     data: {
       userId: `mock-auth-id-admin`,
-      email: `admin@brickell.com`,
+      email: process.env.SUPERADMIN_EMAIL || 'admin@fellow.ai',
       name: `Super Admin`,
       role: Role.ADMIN,
       department: 'Management',

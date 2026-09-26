@@ -29,9 +29,9 @@ export default function Sidebar({ userName = 'Admin', userRole = 'Admin' }: Side
       <div className="h-16 flex items-center px-6 border-b border-slate-200 flex-shrink-0">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-slate-900 flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-xs">B</span>
+            <span className="text-white font-bold text-xs">F</span>
           </div>
-          <h1 className="text-sm font-bold tracking-tight text-slate-900">BRICKELL-CONNECT</h1>
+          <h1 className="text-sm font-bold tracking-tight text-slate-900">FELLOW AI</h1>
         </div>
       </div>
 

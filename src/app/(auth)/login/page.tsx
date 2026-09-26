@@ -24,9 +24,9 @@ export default function LoginPage() {
       {/* Logo */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-900 mb-4">
-          <span className="text-white font-bold text-lg">B</span>
+          <span className="text-white font-bold text-lg">F</span>
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">BRICKELL-CONNECT</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">FELLOW AI</h1>
         <p className="text-sm text-slate-500 mt-1">Sign in to your account</p>
       </div>
 
@@ -52,7 +52,7 @@ export default function LoginPage() {
               required
               disabled={isPending}
               className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1 disabled:opacity-50 disabled:bg-slate-50 transition"
-              placeholder="you@brickell.com"
+              placeholder="you@fellow.ai"
             />
           </div>
 

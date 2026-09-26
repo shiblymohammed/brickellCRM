@@ -27,7 +27,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="flex-1 flex flex-col h-[100dvh] overflow-hidden w-full relative">
         <Topbar userName={userName} userRole={userRole} />
         {/* pb-24 on mobile to account for the BottomBar + floating action button */}
-        <main className="flex-1 overflow-auto p-4 pb-24 md:p-6 md:pb-6">
+        <main className="flex-1 overflow-auto pb-24 md:p-6 md:pb-6">
           {children}
         </main>
         <BottomBar />

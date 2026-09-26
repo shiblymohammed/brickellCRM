@@ -106,8 +106,8 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
   return (
     <div className="flex flex-col h-full bg-slate-50 md:bg-transparent max-w-7xl mx-auto">
       {/* Mobile Sticky Header (Ultra Compact, Merged with Topbar) */}
-      <div className="md:hidden bg-white border-b border-slate-200 sticky top-[-16px] z-20 -mt-4 -mx-4 pt-4 px-2">
-        <div className="flex items-center gap-1.5 p-1.5">
+      <div className="md:hidden bg-white border-b border-slate-200 sticky top-0 z-20 pt-1.5 px-2">
+        <div className="flex items-center gap-1.5 p-1">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input 
@@ -130,7 +130,7 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
             </div>
           )}
         </div>
-        <div className="flex overflow-x-auto scrollbar-hide gap-1 px-1.5 pb-2 mt-1">
+        <div className="flex overflow-x-auto scrollbar-hide gap-1 px-1 pb-2 mt-1">
           {allFilters.map(opt => (
             <button
               key={opt.id}

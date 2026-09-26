@@ -40,9 +40,9 @@ export default function StaffClient() {
     <>
       <button 
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800"
+        className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-slate-900 text-white rounded-lg text-[11px] md:text-sm font-bold hover:bg-slate-800 shadow-sm"
       >
-        <Plus className="w-4 h-4" /> Add Staff Member
+        <Plus className="w-3.5 h-3.5 md:w-4 md:h-4" /> Add Staff
       </button>
 
       {isOpen && (

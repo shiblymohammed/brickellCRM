@@ -112,7 +112,7 @@ export default function UploadPage() {
     const selectedCount = result.contacts.filter(c => c.selected).length
 
     return (
-      <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
+      <div className="max-w-4xl mx-auto space-y-4 md:space-y-6 px-4 pt-4 md:px-0 md:pt-0">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
             <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900">Review Extracted Leads</h2>
@@ -210,7 +210,7 @@ export default function UploadPage() {
         </div>
 
         {/* Mobile Compact Editable List View */}
-        <div className="md:hidden flex flex-col pb-6 -mx-4 px-4">
+        <div className="md:hidden flex flex-col pb-6">
           <div className="flex items-center justify-between px-2 py-2.5 bg-slate-100 border-y border-slate-200 sticky top-0 z-10 -mx-4 px-4 mb-3">
              <div className="flex items-center gap-2">
                <input 
@@ -277,7 +277,7 @@ export default function UploadPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6 px-4 pt-4 md:px-0 md:pt-0">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900">Upload Group Screenshot</h1>
         <p className="text-sm text-slate-500 mt-0.5">
@@ -323,7 +323,7 @@ export default function UploadPage() {
       <button
         onClick={handleUpload}
         disabled={files.length === 0 || uploading}
-        className="w-full h-12 rounded-xl bg-slate-900 text-white font-medium hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full h-12 rounded-xl bg-slate-900 text-white font-medium hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
       >
         {uploading ? <><Loader2 className="w-5 h-5 animate-spin" /> Extracting contacts...</> : 'Extract Contacts'}
       </button>

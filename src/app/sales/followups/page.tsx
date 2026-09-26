@@ -68,23 +68,23 @@ export default function SalesFollowupsPage() {
   const done = followups.filter(f => f.status !== 'PENDING')
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="flex items-end justify-between">
+    <div className="space-y-4 md:space-y-6 max-w-4xl mx-auto px-4 pt-4 md:px-0 md:pt-0">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 md:gap-0">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Follow-ups</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900">Follow-ups</h1>
+          <p className="text-xs md:text-sm text-slate-500 mt-0.5">
             {overdue.length > 0 && (
-              <span className="text-red-600 font-medium">{overdue.length} overdue · </span>
+              <span className="text-red-600 font-bold">{overdue.length} overdue · </span>
             )}
             {today.length} due today · {upcoming.length} upcoming
           </p>
         </div>
-        <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
+        <div className="flex gap-1 bg-slate-100 p-1 rounded-lg self-start md:self-auto w-full md:w-auto overflow-x-auto">
           {(['PENDING', 'ALL', 'COMPLETED', 'MISSED'] as const).map(f => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`px-2 md:px-3 py-1.5 rounded-md text-[10px] md:text-xs font-bold whitespace-nowrap transition-colors flex-1 md:flex-none ${
                 filter === f ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'
               }`}
             >
@@ -178,58 +178,58 @@ function FollowUpCard({
   }[variant]
 
   return (
-    <Card className={`border-l-4 ${borderColor}`}>
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between gap-4">
+    <Card className={`border-l-4 ${borderColor} shadow-sm`}>
+      <CardContent className="p-3 md:p-4">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 md:gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold text-slate-900 text-sm">
+              <span className="font-bold text-slate-900 text-xs md:text-sm">
                 {followup.lead.customerName || 'Unknown Customer'}
               </span>
-              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[followup.status]}`}>
+              <span className={`inline-flex items-center rounded-md px-1.5 md:px-2 py-0.5 text-[9px] md:text-xs font-bold uppercase tracking-wider ${statusStyles[followup.status]}`}>
                 {followup.status}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5 truncate">{followup.lead.requirement || 'No requirement'}</p>
-            <div className="flex items-center gap-3 mt-2">
-              <span className="flex items-center gap-1 text-xs text-slate-500">
-                <Calendar className="w-3 h-3" />
+            <p className="text-[10px] md:text-xs text-slate-500 mt-0.5 truncate">{followup.lead.requirement || 'No requirement'}</p>
+            <div className="flex items-center gap-2 md:gap-3 mt-1.5 md:mt-2">
+              <span className="flex items-center gap-1 text-[10px] md:text-xs text-slate-500 font-mono">
+                <Calendar className="w-2.5 h-2.5 md:w-3 md:h-3" />
                 {format(new Date(followup.date), 'dd MMM yyyy')}
               </span>
-              <span className="flex items-center gap-1 text-xs text-slate-500">
-                <Clock className="w-3 h-3" />
+              <span className="flex items-center gap-1 text-[10px] md:text-xs text-slate-500 font-mono">
+                <Clock className="w-2.5 h-2.5 md:w-3 md:h-3" />
                 {followup.time}
               </span>
             </div>
-            <p className="text-xs text-slate-600 mt-1.5 font-medium">{followup.reason}</p>
+            <p className="text-[11px] md:text-xs text-slate-600 mt-1.5 font-medium">{followup.reason}</p>
           </div>
 
-          <div className="flex flex-col gap-2 flex-shrink-0">
+          <div className="flex md:flex-col gap-2 flex-shrink-0 w-full md:w-auto">
             {followup.status === 'PENDING' && (
               <>
                 {followup.lead.phone && (
-                  <div className="flex gap-1.5">
+                  <div className="flex gap-1.5 flex-1 md:flex-none">
                     <a
                       href={`https://wa.me/${followup.lead.phone.replace(/\D/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-green-50 border border-green-200 text-green-700 text-xs font-medium hover:bg-green-100 transition-colors"
+                      className="flex-1 md:flex-none flex justify-center items-center gap-1 px-2 py-1.5 md:px-2.5 rounded-lg bg-green-50 border border-green-200 text-green-700 text-[10px] md:text-xs font-bold uppercase tracking-wider hover:bg-green-100 transition-colors"
                     >
-                      <MessageCircle className="w-3 h-3" /> WA
+                      <MessageCircle className="w-3 h-3 md:w-3 md:h-3" /> WA
                     </a>
                     <a
                       href={`tel:${followup.lead.phone.replace(/\D/g, '')}`}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-medium hover:bg-slate-700 transition-colors"
+                      className="flex-1 md:flex-none flex justify-center items-center gap-1 px-2 py-1.5 md:px-2.5 rounded-lg bg-slate-900 text-white text-[10px] md:text-xs font-bold uppercase tracking-wider hover:bg-slate-700 transition-colors"
                     >
-                      <Phone className="w-3 h-3" /> Call
+                      <Phone className="w-3 h-3 md:w-3 md:h-3" /> Call
                     </a>
                   </div>
                 )}
-                <div className="flex gap-1.5">
+                <div className="flex gap-1.5 flex-1 md:flex-none">
                   <button
                     onClick={() => onUpdate(followup.id, 'COMPLETED')}
                     disabled={updating === followup.id}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium hover:bg-emerald-100 transition-colors disabled:opacity-50"
+                    className="flex-1 md:flex-none flex justify-center items-center gap-1 px-2 py-1.5 md:px-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] md:text-xs font-bold uppercase tracking-wider hover:bg-emerald-100 transition-colors disabled:opacity-50"
                   >
                     {updating === followup.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
                     Done
@@ -237,7 +237,7 @@ function FollowUpCard({
                   <button
                     onClick={() => onUpdate(followup.id, 'MISSED')}
                     disabled={updating === followup.id}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs font-medium hover:bg-red-100 transition-colors disabled:opacity-50"
+                    className="flex-1 md:flex-none flex justify-center items-center gap-1 px-2 py-1.5 md:px-2.5 rounded-lg bg-red-50 border border-red-200 text-red-600 text-[10px] md:text-xs font-bold uppercase tracking-wider hover:bg-red-100 transition-colors disabled:opacity-50"
                   >
                     <XCircle className="w-3 h-3" /> Missed
                   </button>

@@ -9,8 +9,8 @@ import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
 import { prisma } from '../src/lib/db/prisma'
 
-const ADMIN_EMAIL = 'admin@brickell.com'
-const ADMIN_PASSWORD = 'Admin@123456' // Change this after first login!
+const ADMIN_EMAIL = process.env.SUPERADMIN_EMAIL || 'admin@fellow.ai'
+const ADMIN_PASSWORD = process.env.SUPERADMIN_PASSWORD || 'Admin@123456' // Change this after first login!
 
 async function main() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
