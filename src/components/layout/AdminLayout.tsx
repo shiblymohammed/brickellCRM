@@ -24,10 +24,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="flex h-[100dvh] w-full bg-slate-50 text-slate-900 font-sans overflow-hidden">
       <Sidebar userName={userName} userRole={userRole} />
-      <div className="flex-1 flex flex-col h-[100dvh] overflow-hidden w-full relative">
-        <Topbar userName={userName} userRole={userRole} />
-        {/* pb-24 on mobile to account for the BottomBar + floating action button */}
-        <main className="flex-1 overflow-auto pb-24 md:p-6 md:pb-6">
+      <div className="flex-1 h-[100dvh] w-full relative">
+        <div className="absolute top-0 inset-x-0 z-40">
+          <Topbar userName={userName} userRole={userRole} />
+        </div>
+        <main className="absolute inset-0 overflow-auto md:p-6 w-full z-0">
+          <div className="h-[52px] md:h-16 w-full flex-shrink-0" /> {/* Topbar Spacer */}
           {children}
         </main>
         <BottomBar />

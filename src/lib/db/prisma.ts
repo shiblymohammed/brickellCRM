@@ -4,7 +4,11 @@ import { PrismaClient } from '@prisma/client'
 
 const connectionString = `${process.env.DATABASE_URL}`
 
-const pool = new Pool({ connectionString })
+const pool = new Pool({ 
+  connectionString,
+  max: 1, // Limit connections per serverless function to prevent exhausting Supabase pool
+  connectionTimeoutMillis: 5000
+})
 const adapter = new PrismaPg(pool)
 
 const globalForPrisma = globalThis as unknown as {

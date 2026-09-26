@@ -30,12 +30,11 @@ export default function BottomBar() {
     <>
       {/* More Menu Drawer */}
       {showMore && (
-        <div className="md:hidden fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowMore(false)}>
+        <div className="md:hidden fixed inset-0 z-40 bg-slate-900/10 backdrop-blur-md transition-all duration-500 ease-out" onClick={() => setShowMore(false)}>
           <div 
-            className="absolute bottom-[64px] left-0 right-0 bg-white rounded-t-2xl shadow-xl border-t border-slate-200 flex flex-col p-4 animate-in slide-in-from-bottom"
+            className="absolute bottom-[104px] left-6 right-6 bg-white/75 backdrop-blur-3xl rounded-[2rem] shadow-[0_20px_40px_rgb(0,0,0,0.08)] border border-white/60 flex flex-col p-6 animate-in slide-in-from-bottom duration-300"
             onClick={e => e.stopPropagation()}
           >
-            <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-4" />
             <div className="grid grid-cols-4 gap-4 mb-4">
               {moreLinks.map((link) => {
                 const Icon = link.icon
@@ -45,12 +44,12 @@ export default function BottomBar() {
                     href={link.href}
                     prefetch={true}
                     onClick={() => setShowMore(false)}
-                    className="flex flex-col items-center gap-2"
+                    className="flex flex-col items-center gap-2 group"
                   >
-                    <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600">
+                    <div className="w-12 h-12 rounded-2xl bg-white/50 shadow-sm border border-white/60 flex items-center justify-center text-slate-500 group-hover:scale-110 group-hover:text-slate-900 group-hover:bg-white transition-all duration-300">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-[10px] font-medium text-slate-600">{link.name}</span>
+                    <span className="text-[10px] font-semibold tracking-tight text-slate-500 group-hover:text-slate-900 transition-colors">{link.name}</span>
                   </Link>
                 )
               })}
@@ -72,52 +71,73 @@ export default function BottomBar() {
       )}
 
       {/* Main Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-slate-200 flex items-center justify-around px-2 z-50 pb-[env(safe-area-inset-bottom)]">
-        {bottomLinks.map((link) => {
-          const isActive = pathname === link.href
-          const Icon = link.icon
+      <div className="md:hidden fixed bottom-6 left-0 right-0 flex justify-center z-50 pointer-events-none px-4">
+        <nav className="relative h-16 w-max bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.1)] rounded-[2rem] flex items-center px-4 gap-2.5 pointer-events-auto">
+          
+          {/* Fluid Sliding Background Pill */}
+          {(() => {
+            const activeIndex = showMore 
+              ? 4 
+              : bottomLinks.findIndex(l => pathname === l.href);
+            
+            const leftPositions = [16, 74, 132, 190, 248];
+            const isVisible = activeIndex >= 0;
 
-          if (link.isPrimary) {
+            return (
+              <div 
+                className={cn(
+                  "absolute top-1/2 w-[48px] h-[48px] bg-slate-900/90 shadow-md rounded-full transition-all duration-[500ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] z-0 backdrop-blur-sm",
+                  isVisible ? "opacity-100" : "opacity-0 scale-75"
+                )}
+                style={{
+                  left: isVisible ? `${leftPositions[activeIndex]}px` : '16px',
+                  transform: 'translateY(-50%)',
+                }}
+              />
+            )
+          })()}
+
+          {/* Nav Buttons */}
+          {bottomLinks.map((link) => {
+            const isActive = pathname === link.href && !showMore
+            const Icon = link.icon
+
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 prefetch={true}
-                className="relative -top-5 flex flex-col items-center justify-center w-14 h-14 bg-slate-900 rounded-full shadow-lg text-white hover:scale-105 transition-transform"
+                onClick={() => setShowMore(false)}
+                className={cn(
+                  "relative flex items-center justify-center w-[48px] h-[48px] rounded-full transition-all duration-[400ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] z-10",
+                  !isActive && "hover:bg-white/20 hover:scale-105"
+                )}
               >
-                <Icon className="w-6 h-6" />
+                <Icon className={cn(
+                  "w-[22px] h-[22px] transition-all duration-[400ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]", 
+                  isActive ? "text-white scale-110 drop-shadow-md" : "text-slate-700 drop-shadow-sm group-hover:text-slate-900"
+                )} />
               </Link>
             )
-          }
+          })}
 
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              prefetch={true}
-              className={cn(
-                "flex flex-col items-center justify-center w-16 h-full gap-1 transition-colors",
-                isActive ? "text-slate-900" : "text-slate-400"
-              )}
-            >
-              <Icon className={cn("w-5 h-5", isActive && "fill-slate-100")} />
-              <span className="text-[10px] font-medium">{link.name}</span>
-            </Link>
-          )
-        })}
+          <div className="w-[1.5px] h-6 bg-slate-300/30 rounded-full mx-1" />
 
-        {/* More Button */}
-        <button
-          onClick={() => setShowMore(!showMore)}
-          className={cn(
-            "flex flex-col items-center justify-center w-16 h-full gap-1 transition-colors",
-            showMore ? "text-slate-900" : "text-slate-400"
-          )}
-        >
-          <MoreHorizontal className="w-5 h-5" />
-          <span className="text-[10px] font-medium">More</span>
-        </button>
-      </nav>
+          {/* More Button */}
+          <button
+            onClick={() => setShowMore(!showMore)}
+            className={cn(
+              "relative flex items-center justify-center w-[48px] h-[48px] rounded-full transition-all duration-[400ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] z-10",
+              !showMore && "hover:bg-white/20 hover:scale-105"
+            )}
+          >
+            <MoreHorizontal className={cn(
+              "w-[22px] h-[22px] transition-all duration-[400ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+              showMore ? "text-white scale-110 drop-shadow-md" : "text-slate-700 drop-shadow-sm"
+            )} />
+          </button>
+        </nav>
+      </div>
     </>
   )
 }

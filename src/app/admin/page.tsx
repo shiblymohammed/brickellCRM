@@ -189,6 +189,7 @@ export default async function AdminDashboard() {
           </a>
         </div>
       </div>
+      <div className="h-28 md:hidden flex-shrink-0" />
     </div>
   )
 }

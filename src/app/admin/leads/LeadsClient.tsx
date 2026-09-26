@@ -94,24 +94,24 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
   return (
     <div className="flex flex-col h-full bg-slate-50 md:bg-transparent max-w-7xl mx-auto">
       {/* Mobile Sticky Header (Ultra Compact, Merged with Topbar) */}
-      <div className="md:hidden bg-white border-b border-slate-200 sticky top-0 z-20 pt-1.5 px-2">
+      <div className="md:hidden bg-white/40 backdrop-blur-[40px] backdrop-saturate-[150%] border-b border-white/40 sticky top-[52px] z-30 pt-1.5 px-2 shadow-sm">
         <div className="flex items-center gap-1.5 p-1">
           <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search leads..." 
-              className="w-full h-8 pl-8 pr-2 rounded-lg bg-slate-100 border-none text-[12px] focus:ring-1 focus:ring-slate-900 focus:outline-none"
+              className="w-full h-9 pl-8 pr-2 rounded-xl bg-white/50 border border-white/50 text-xs focus:ring-1 focus:ring-slate-900 focus:outline-none shadow-sm backdrop-blur-md"
             />
           </div>
           {selectedLeads.size > 0 && (
             <div className="flex items-center gap-1">
-              <span className="text-[11px] font-bold text-slate-500 px-1">{selectedLeads.size}</span>
+              <span className="text-[11px] font-bold text-slate-600 px-1">{selectedLeads.size}</span>
               <button
                 onClick={() => handleBulkAssign('round_robin')}
                 disabled={assigning}
-                className="h-8 px-3 rounded-lg bg-slate-900 text-white text-[11px] font-bold flex items-center justify-center disabled:opacity-50"
+                className="h-9 px-4 rounded-xl bg-slate-900 text-white text-xs font-bold flex items-center justify-center shadow-md disabled:opacity-50"
               >
                 {assigning ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Assign'}
               </button>
@@ -123,10 +123,10 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
             <button
               key={opt.id}
               onClick={() => setActiveFilter(opt.id)}
-              className={`flex-shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase whitespace-nowrap border ${
+              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[10px] font-bold tracking-wide uppercase whitespace-nowrap border shadow-sm backdrop-blur-md transition-colors ${
                 activeFilter === opt.id 
                 ? 'bg-slate-900 text-white border-slate-900' 
-                : 'bg-slate-50 border-slate-200 text-slate-600'
+                : 'bg-white/50 border-white/40 text-slate-600'
               }`}
             >
               {opt.label}
@@ -134,17 +134,17 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
           ))}
         </div>
         {/* Mobile Select All Bar */}
-        <div className="flex items-center justify-between px-3 py-1.5 bg-slate-50 border-t border-slate-200">
-          <button onClick={toggleAll} className="flex items-center gap-1.5 text-[10px] font-bold text-slate-600 uppercase">
-            {selectedLeads.size === filteredLeads.length && filteredLeads.length > 0 ? <CheckSquare className="w-3.5 h-3.5" /> : <Square className="w-3.5 h-3.5" />}
+        <div className="flex items-center justify-between px-3 py-2 bg-white/30 backdrop-blur-md border-t border-white/40 shadow-inner">
+          <button onClick={toggleAll} className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700 uppercase">
+            {selectedLeads.size === filteredLeads.length && filteredLeads.length > 0 ? <CheckSquare className="w-4 h-4 text-slate-900" /> : <Square className="w-4 h-4" />}
             Select All
           </button>
-          <span className="text-[9px] text-slate-400 font-bold uppercase">{filteredLeads.length} leads</span>
+          <span className="text-[10px] text-slate-500 font-bold uppercase">{filteredLeads.length} leads</span>
         </div>
       </div>
 
       {/* Desktop Sticky Header */}
-      <div className="hidden md:block bg-transparent px-4 pt-4 pb-3 sticky top-0 z-10 space-y-3">
+      <div className="hidden md:block bg-white/40 backdrop-blur-[40px] backdrop-saturate-[150%] px-4 pt-4 pb-3 sticky top-16 z-30 space-y-3 border-b border-white/30 shadow-sm">
         <div className="flex items-center justify-between gap-4">
           <div className="relative flex-1 max-w-lg">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -152,14 +152,14 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name or phone..." 
-              className="w-full h-10 pl-9 pr-4 rounded-lg border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none shadow-sm"
+              className="w-full h-10 pl-9 pr-4 rounded-xl border border-white/50 bg-white/50 text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none shadow-sm backdrop-blur-md"
             />
           </div>
-          <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 shadow-sm">
-            <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-md ${viewMode === 'list' ? 'bg-slate-100 text-slate-900' : 'text-slate-400 hover:text-slate-600'}`}>
+          <div className="flex items-center gap-1 bg-white/40 p-1 rounded-xl border border-white/50 shadow-sm backdrop-blur-md">
+            <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'}`}>
               <List className="w-4 h-4"/>
             </button>
-            <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-md ${viewMode === 'grid' ? 'bg-slate-100 text-slate-900' : 'text-slate-400 hover:text-slate-600'}`}>
+            <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'}`}>
               <LayoutGrid className="w-4 h-4"/>
             </button>
           </div>
@@ -170,8 +170,8 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
             <button
               key={opt.id}
               onClick={() => setActiveFilter(opt.id)}
-              className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-wide uppercase shadow-sm border ${
-                activeFilter === opt.id ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-slate-200 text-slate-600'
+              className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-wide uppercase shadow-sm border backdrop-blur-md transition-colors ${
+                activeFilter === opt.id ? 'bg-slate-900 text-white border-slate-900' : 'bg-white/50 border-white/40 text-slate-600'
               }`}
             >
               {opt.label}
@@ -180,20 +180,20 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
         </div>
 
         {selectedLeads.size > 0 && (
-          <div className="flex items-center justify-between bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-xl border border-slate-800">
+          <div className="flex items-center justify-between bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-[0_8px_30px_rgba(15,23,42,0.3)] border border-slate-800 backdrop-blur-md">
             <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">{selectedLeads.size}</span>
+              <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold shadow-inner">{selectedLeads.size}</span>
               <span className="text-sm font-semibold">Selected</span>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => handleBulkAssign('round_robin')} className="bg-white text-slate-900 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-50">Auto (Round Robin)</button>
+              <button onClick={() => handleBulkAssign('round_robin')} className="bg-white text-slate-900 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-100 shadow-sm transition-colors">Auto (Round Robin)</button>
             </div>
           </div>
         )}
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-auto pb-6">
+      <div className="flex-1 overflow-auto">
         {filteredLeads.length === 0 ? (
           <div className="p-8 text-center text-slate-400 text-xs font-medium">
             No leads found.
@@ -292,6 +292,7 @@ export default function LeadsClient({ initialLeads }: { initialLeads: any[] }) {
             </div>
           </>
         )}
+        <div className="h-28 md:hidden flex-shrink-0" />
       </div>
     </div>
   )
