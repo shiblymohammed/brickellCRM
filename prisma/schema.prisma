@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  SALES_MANAGER
+  SALES_STAFF
+}
+
+enum LeadStatus {
+  AI_DRAFT
+  PENDING_AUDIT
+  REJECTED
+  APPROVED
+  ASSIGNED
+  CONTACTED
+  INTERESTED
+  FOLLOW_UP
+  QUOTATION
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum AIProcessingStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum FollowUpStatus {
+  PENDING
+  COMPLETED
+  MISSED
+  CANCELLED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  LATE
+  HALF_DAY
+  ABSENT
+  ON_LEAVE
+}
+
+model Employee {
+  id             String       @id @default(uuid())
+  userId         String       @unique // Linked to Supabase auth.users.id
+  email          String       @unique
+  name           String
+  phone          String?
+  role           Role         @default(SALES_STAFF)
+  department     String?
+  active         Boolean      @default(true)
+  profileImage   String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  assignedLeads  Lead[]       @relation("AssignedLeads")
+  createdLeads   Lead[]       @relation("CreatedLeads")
+  leadActivities LeadActivity[]
+  leadNotes      LeadNote[]
+  followUps      FollowUp[]
+  attendances    Attendance[]
+}
+
+model Lead {
+  id                  String       @id @default(uuid())
+  leadId              String       @unique @default(cuid()) // E.g., LD-1042
+  
+  // Extracted Info
+  customerName        String?
+  phone               String?
+  alternatePhone      String?
+  location            String?
+  requirement         String?
+  category            String?
+  budget              String?
+  timeline            String?
+  urgency             String?
+  intent              String?
+  leadTemperature     String?
+  summary             String?
+  
+  // JSON fields for arrays
+  customerQuestions   Json?
+  requirementsList    Json?
+  objections          Json?
+  lastCustomerMessage String?
+  missingInformation  Json?
+  
+  aiConfidence        Int?
+
+  status              LeadStatus   @default(AI_DRAFT)
+
+  // Relations
+  assignedToId        String?
+  assignedTo          Employee?    @relation("AssignedLeads", fields: [assignedToId], references: [id])
+  createdById         String?
+  createdBy           Employee?    @relation("CreatedLeads", fields: [createdById], references: [id])
+  
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  screenshots         LeadScreenshot[]
+  history             LeadStatusHistory[]
+  activities          LeadActivity[]
+  notes               LeadNote[]
+  followUps           FollowUp[]
+}
+
+model LeadScreenshot {
+  id         String   @id @default(uuid())
+  leadId     String?
+  lead       Lead?    @relation(fields: [leadId], references: [id])
+  storageUrl String
+  hash       String   @unique
+  createdAt  DateTime @default(now())
+}
+
+model AIProcessing {
+  id               String             @id @default(uuid())
+  imageHash        String             @unique
+  extractionResult Json?
+  modelUsed        String
+  status           AIProcessingStatus @default(QUEUED)
+  errorMessage     String?
+  timestamp        DateTime           @default(now())
+}
+
+model LeadStatusHistory {
+  id         String     @id @default(uuid())
+  leadId     String
+  lead       Lead       @relation(fields: [leadId], references: [id])
+  status     LeadStatus
+  changedById String?
+  timestamp  DateTime   @default(now())
+}
+
+model LeadActivity {
+  id          String   @id @default(uuid())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id])
+  type        String
+  description String
+  createdById String?
+  createdBy   Employee? @relation(fields: [createdById], references: [id])
+  timestamp   DateTime @default(now())
+}
+
+model LeadNote {
+  id        String   @id @default(uuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id])
+  note      String
+  authorId  String
+  author    Employee @relation(fields: [authorId], references: [id])
+  timestamp DateTime @default(now())
+}
+
+model FollowUp {
+  id              String         @id @default(uuid())
+  leadId          String
+  lead            Lead           @relation(fields: [leadId], references: [id])
+  assignedStaffId String
+  assignedStaff   Employee       @relation(fields: [assignedStaffId], references: [id])
+  date            DateTime
+  time            String
+  reason          String
+  status          FollowUpStatus @default(PENDING)
+  createdAt       DateTime       @default(now())
+}
+
+model Attendance {
+  id           String           @id @default(uuid())
+  employeeId   String
+  employee     Employee         @relation(fields: [employeeId], references: [id])
+  date         DateTime
+  checkInTime  DateTime?
+  checkOutTime DateTime?
+  status       AttendanceStatus @default(PRESENT)
+}
